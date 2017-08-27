@@ -14,13 +14,18 @@ public class InsertDataThread extends Thread {
 		long insertTime = 60000;
 		long noConnet = 300000;
 		while (true) {
+			//插入数据的数据库
 			ConnectionDbTo connectionDbTo = new ConnectionDbTo();
+			//数据来源数据库
 			ConnectionDbFrom connectionDbFrom = new ConnectionDbFrom();
+			//同步类
 			InsertNewData insertNewData = new InsertNewData();
+			
 			if (connectionDbFrom.getconnection()!=null&&connectionDbTo.getconnection()!=null) {
 				ResultSet resultSet = insertNewData.SelectNewDate(connectionDbFrom.getconnection(),
 						connectionDbTo.getconnection(), "website", "website");
 				System.out.println("取出数据");
+				//有未同步的数据
 				if (resultSet != null) {
 					insertNewData.Insert(connectionDbTo.getconnection(), resultSet, "website");
 					System.out.println("插入完成");

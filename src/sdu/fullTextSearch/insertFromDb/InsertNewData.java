@@ -23,13 +23,12 @@ public class InsertNewData {
 					resultSetFrom.beforeFirst();
 				}
 				if (resultSetTo.next() && resultSetFrom.next()) {
-					if (resultSetTo.getInt(1) < resultSetFrom.getInt(1)) {
-						sql = "select * " + "from  " + tableNameFrom + " where id > " + resultSetTo.getInt(1) + " ; ";
+					// 判断是否存在未同步的数据
+					int idLastTO = resultSetTo.getInt(1);
+					int idLastFrom = resultSetFrom.getInt(1);
+					if (idLastTO < idLastFrom) {
+						sql = "select * " + "from  " + tableNameFrom + " where id > " + idLastTO + " ; ";
 						ResultSet resultSetNewData = statementFrom.executeQuery(sql);
-						// statementFrom.close();
-						// statementTo.close();
-						// connectionFrom.close();
-						// connectionTo.close();
 						return resultSetNewData;
 					} else {
 						System.err.println("暂无新数据");
@@ -41,7 +40,7 @@ public class InsertNewData {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}else {
+		} else {
 			System.err.println("数据库连接失败");
 		}
 
@@ -49,7 +48,7 @@ public class InsertNewData {
 	}
 
 	public boolean Insert(Connection connection, ResultSet resultSet, String tableNameTo) {
-		if (connection !=null) {
+		if (connection != null) {
 			if (resultSet != null) {
 				try {
 					resultSet.last();
@@ -85,13 +84,13 @@ public class InsertNewData {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}else {
+			} else {
 				System.err.println("插入数据为空");
 			}
-		}else {
+		} else {
 			System.err.println("数据库连接失败");
 		}
-		
+
 		return false;
 	}
 
